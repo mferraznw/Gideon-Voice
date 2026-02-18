@@ -1,0 +1,567 @@
+{
+  "builtTestProducts" : [
+
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.GideonTalk-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/sources",
+      "importPath" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/GideonTalkApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Models/ConversationState.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Models/Message.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/AudioPlayer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/AudioRecorder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/ChatService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/STTService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/TTSService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/ConfigManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/GatewayConfig.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/HotkeyManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/AvatarView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/MenuBarView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/OverlayView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/OverlayWindow.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/SettingsView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/WaveformView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/sources"
+        }
+      ],
+      "isLibrary" : false,
+      "moduleName" : "GideonTalk",
+      "moduleOutputPath" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/Modules/GideonTalk.swiftmodule",
+      "objects" : [
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/GideonTalkApp.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/ConversationState.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/Message.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/AudioPlayer.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/AudioRecorder.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/ChatService.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/STTService.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/TTSService.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/ConfigManager.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/GatewayConfig.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/HotkeyManager.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/AvatarView.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/MenuBarView.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/OverlayView.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/OverlayWindow.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/SettingsView.swift.o",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/WaveformView.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j16",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-Xfrontend",
+        "-entry-point-function-name",
+        "-Xfrontend",
+        "GideonTalk_main",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "gideon_voice"
+      ],
+      "outputFileMapPath" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/GideonTalkApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/ConversationState.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/Message.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/AudioPlayer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/AudioRecorder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/ChatService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/STTService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/TTSService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/ConfigManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/GatewayConfig.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/HotkeyManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/AvatarView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/MenuBarView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/OverlayView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/OverlayWindow.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/SettingsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/WaveformView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/Modules/GideonTalk.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/GideonTalkApp.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Models/ConversationState.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Models/Message.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/AudioPlayer.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/AudioRecorder.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/ChatService.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/STTService.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/TTSService.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/ConfigManager.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/GatewayConfig.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/HotkeyManager.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/AvatarView.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/MenuBarView.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/OverlayView.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/OverlayWindow.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/SettingsView.swift",
+        "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/WaveformView.swift"
+      ],
+      "tempsPath" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "GideonTalk" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "GideonTalk",
+      "-package-name",
+      "gideon_voice",
+      "-c",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/GideonTalkApp.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Models/ConversationState.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Models/Message.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/AudioPlayer.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/AudioRecorder.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/ChatService.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/STTService.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/TTSService.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/ConfigManager.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/GatewayConfig.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/HotkeyManager.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/AvatarView.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/MenuBarView.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/OverlayView.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/OverlayWindow.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/SettingsView.swift",
+      "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/WaveformView.swift",
+      "-I",
+      "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j16",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-Xfrontend",
+      "-entry-point-function-name",
+      "-Xfrontend",
+      "GideonTalk_main",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "gideon_voice",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "GideonTalk" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk-entitlement.plist" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<entitlement-plist>"
+        },
+        {
+          "kind" : "virtual",
+          "name" : "<com.apple.security.get-task-allow>"
+        }
+      ],
+      "outputFilePath" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk-entitlement.plist"
+    },
+    "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/GideonTalkApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Models/ConversationState.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Models/Message.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/AudioPlayer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/AudioRecorder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/ChatService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/STTService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/TTSService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/ConfigManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/GatewayConfig.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/HotkeyManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/AvatarView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/MenuBarView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/OverlayView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/OverlayWindow.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/SettingsView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/WaveformView.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/sources"
+    },
+    "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/AudioPlayer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/AudioRecorder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/AvatarView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/ChatService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/ConfigManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/ConversationState.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/GatewayConfig.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/GideonTalkApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/HotkeyManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/MenuBarView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/Message.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/OverlayView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/OverlayWindow.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/STTService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/SettingsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/TTSService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.build/WaveformView.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/GideonTalk.product/Objects.LinkFileList"
+    },
+    "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/mferraz/Repos/Gideon-Voice/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

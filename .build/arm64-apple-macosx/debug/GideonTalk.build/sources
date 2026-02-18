@@ -1,0 +1,17 @@
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/GideonTalkApp.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Models/ConversationState.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Models/Message.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/AudioPlayer.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/AudioRecorder.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/ChatService.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/STTService.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Services/TTSService.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/ConfigManager.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/GatewayConfig.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Utilities/HotkeyManager.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/AvatarView.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/MenuBarView.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/OverlayView.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/OverlayWindow.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/SettingsView.swift
+/Users/mferraz/Repos/Gideon-Voice/Sources/GideonTalk/Views/WaveformView.swift
