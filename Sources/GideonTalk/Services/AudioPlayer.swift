@@ -1,5 +1,6 @@
 import Foundation
 import AVFoundation
+import SwiftUI
 
 @MainActor
 class AudioPlayer: NSObject, ObservableObject {
@@ -11,6 +12,7 @@ class AudioPlayer: NSObject, ObservableObject {
     
     @Published var isPlaying = false
     @Published var currentLevel: Float = 0
+    @Published var levels: [CGFloat] = Array(repeating: 0.08, count: 5)
     
     private override init() {
         super.init()
@@ -20,6 +22,7 @@ class AudioPlayer: NSObject, ObservableObject {
         do {
             player = try AVAudioPlayer(data: data)
             player?.delegate = self
+            player?.isMeteringEnabled = true
             player?.prepareToPlay()
             completionHandler = completion
             isPlaying = true
@@ -37,6 +40,8 @@ class AudioPlayer: NSObject, ObservableObject {
         player?.stop()
         player = nil
         isPlaying = false
+        currentLevel = 0
+        levels = Array(repeating: 0.08, count: 5)
         levelTimer?.invalidate()
         levelTimer = nil
     }
@@ -49,7 +54,13 @@ class AudioPlayer: NSObject, ObservableObject {
                     timer.invalidate()
                     return
                 }
-                self.currentLevel = Float.random(in: 0.3...1.0)
+
+                self.player?.updateMeters()
+                let avgPower = self.player?.averagePower(forChannel: 0) ?? -80
+                let normalized = max(0.02, min(1.0, (avgPower + 60) / 60))
+
+                self.currentLevel = normalized
+                self.levels = [0.68, 0.86, 1.0, 0.86, 0.68].map { CGFloat(normalized) * $0 }
             }
         }
     }
@@ -59,6 +70,8 @@ extension AudioPlayer: AVAudioPlayerDelegate {
     nonisolated func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         Task { @MainActor in
             self.isPlaying = false
+            self.currentLevel = 0
+            self.levels = Array(repeating: 0.08, count: 5)
             self.levelTimer?.invalidate()
             self.levelTimer = nil
             self.completionHandler?()

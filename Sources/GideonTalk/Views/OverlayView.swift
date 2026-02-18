@@ -2,8 +2,6 @@ import SwiftUI
 
 struct OverlayView: View {
     @StateObject private var stateManager = StateManager.shared
-    @State private var position: CGPoint = .zero
-    @State private var isDragging = false
     
     var body: some View {
         VStack(spacing: 12) {
@@ -34,6 +32,7 @@ struct OverlayView: View {
                 if stateManager.state == .listening {
                     WaveformView()
                         .frame(height: 40)
+                        .transition(.opacity.combined(with: .scale(scale: 0.95)))
                 }
                 
                 // User transcript
@@ -47,6 +46,7 @@ struct OverlayView: View {
                 // Thinking indicator
                 if stateManager.state == .thinking {
                     ThinkingView()
+                        .transition(.opacity)
                 }
                 
                 // Response
@@ -61,31 +61,23 @@ struct OverlayView: View {
                 if stateManager.state == .speaking {
                     SpeakingBarsView()
                         .frame(height: 30)
+                        .transition(.opacity.combined(with: .scale(scale: 0.95)))
                 }
             }
             .frame(maxWidth: .infinity)
+            .animation(.easeInOut(duration: 0.2), value: stateManager.state)
         }
         .padding(16)
         .background(
-            VisualEffectView(material: .hudWindow, blendingMode: .behindWindow)
-                .cornerRadius(12)
+            RoundedRectangle(cornerRadius: 12)
+                .fill(.ultraThinMaterial)
+                .overlay(Color.black.opacity(0.28).clipShape(RoundedRectangle(cornerRadius: 12)))
         )
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .stroke(Color.white.opacity(0.1), lineWidth: 1)
         )
         .shadow(color: .black.opacity(0.3), radius: 20, x: 0, y: 10)
-        .gesture(
-            DragGesture()
-                .onChanged { value in
-                    if let window = NSApp.keyWindow as? NSPanel {
-                        var newOrigin = window.frame.origin
-                        newOrigin.x += value.translation.width
-                        newOrigin.y -= value.translation.height
-                        window.setFrameOrigin(newOrigin)
-                    }
-                }
-        )
     }
 }
 

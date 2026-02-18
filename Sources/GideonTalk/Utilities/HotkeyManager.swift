@@ -1,13 +1,22 @@
 import Foundation
 import Carbon
 
+@MainActor
 class HotkeyManager {
     var onToggle: (() -> Void)?
     private var hotKeyRef: EventHotKeyRef?
     private var handler: EventHandlerRef?
     
     func start() {
-        registerHotkey()
+        registerHotkey(
+            keyCode: ConfigManager.shared.hotkeyKeyCode,
+            modifiers: ConfigManager.shared.hotkeyModifiers
+        )
+    }
+
+    func updateHotkey(keyCode: UInt32, modifiers: UInt32) {
+        stop()
+        registerHotkey(keyCode: keyCode, modifiers: modifiers)
     }
     
     func stop() {
@@ -19,12 +28,8 @@ class HotkeyManager {
         }
     }
     
-    private func registerHotkey() {
+    private func registerHotkey(keyCode: UInt32, modifiers: UInt32) {
         let hotkeyId = EventHotKeyID(signature: OSType("GTaL".fourCharCode), id: 0)
-        
-        // Cmd+Shift+G
-        let keyCode: UInt32 = 5 // G key
-        let modifiers: UInt32 = UInt32(cmdKey | shiftKey)
         
         var eventType = EventTypeSpec(
             eventClass: OSType(kEventClassKeyboard),
@@ -32,10 +37,10 @@ class HotkeyManager {
         )
         
         // Install handler
-        let handlerCallback: EventHandlerUPP = { _, event, userData -> OSStatus in
+        let handlerCallback: EventHandlerUPP = { _, _, userData -> OSStatus in
             guard let userData = userData else { return OSStatus(eventNotHandledErr) }
             let manager = Unmanaged<HotkeyManager>.fromOpaque(userData).takeUnretainedValue()
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 manager.onToggle?()
             }
             return noErr

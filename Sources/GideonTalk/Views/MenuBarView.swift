@@ -5,6 +5,7 @@ import SwiftUI
 class MenuBarManager: ObservableObject {
     private var statusItem: NSStatusItem?
     private var menu: NSMenu?
+    private var settingsWindow: NSWindow?
     
     init() {
         setupStatusItem()
@@ -76,19 +77,21 @@ class MenuBarManager: ObservableObject {
     
     @objc private func newConversation() {
         ConversationManager.shared.clearHistory()
+        StateManager.shared.currentTranscript = ""
+        StateManager.shared.currentResponse = ""
     }
     
     @objc private func openSettings() {
         // Open settings window
-        let settingsWindow = NSWindow(
+        settingsWindow = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 400, height: 500),
             styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false
         )
-        settingsWindow.contentView = NSHostingView(rootView: SettingsView())
-        settingsWindow.center()
-        settingsWindow.makeKeyAndOrderFront(nil)
+        settingsWindow?.contentView = NSHostingView(rootView: SettingsView())
+        settingsWindow?.center()
+        settingsWindow?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
     }
     
@@ -99,4 +102,5 @@ class MenuBarManager: ObservableObject {
 
 extension Notification.Name {
     static let toggleListening = Notification.Name("toggleListening")
+    static let hotkeyDidChange = Notification.Name("hotkeyDidChange")
 }

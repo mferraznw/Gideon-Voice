@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 @main
 struct GideonTalkApp: App {
@@ -17,6 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var overlayWindow: OverlayWindow!
     var menuBarManager: MenuBarManager!
     var hotkeyManager: HotkeyManager!
+    private var cancellables = Set<AnyCancellable>()
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Set as accessory (menu bar only, no Dock icon)
@@ -26,6 +28,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menuBarManager = MenuBarManager()
         overlayWindow = OverlayWindow()
         hotkeyManager = HotkeyManager()
+
+        AudioRecorder.shared.onSilenceDetected = { [weak self] in
+            guard let self else { return }
+            guard StateManager.shared.state == .listening else { return }
+            self.stopListeningAndProcess()
+        }
+
+        StateManager.shared.$state
+            .receive(on: RunLoop.main)
+            .sink { [weak self] state in
+                self?.menuBarManager.updateIcon(for: state)
+            }
+            .store(in: &cancellables)
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleToggleNotification),
+            name: .toggleListening,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleHotkeyChangedNotification),
+            name: .hotkeyDidChange,
+            object: nil
+        )
         
         // Setup hotkey callback
         hotkeyManager.onToggle = { [weak self] in
@@ -36,6 +64,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Try to start hotkey
         hotkeyManager.start()
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        hotkeyManager.stop()
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func handleToggleNotification() {
+        toggleListening()
+    }
+
+    @objc private func handleHotkeyChangedNotification() {
+        hotkeyManager.updateHotkey(
+            keyCode: ConfigManager.shared.hotkeyKeyCode,
+            modifiers: ConfigManager.shared.hotkeyModifiers
+        )
     }
     
     func toggleListening() {
@@ -52,17 +96,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     private func startListening() {
+        StateManager.shared.currentTranscript = ""
+        StateManager.shared.currentResponse = ""
+        StateManager.shared.error = nil
         StateManager.shared.state = .listening
         overlayWindow.show()
-        Task {
-            await AudioRecorder.shared.startRecording()
-        }
+        AudioRecorder.shared.startRecording()
     }
     
     private func stopListeningAndProcess() {
+        guard AudioRecorder.shared.isRecording else { return }
         StateManager.shared.state = .thinking
         Task {
-            let audioData = await AudioRecorder.shared.stopRecording()
+            let audioData = AudioRecorder.shared.stopRecording()
             await processAudio(audioData)
         }
     }
@@ -72,11 +118,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let sttURL = config.sttURL
         let gatewayURL = config.gatewayURL
         let token = config.gatewayToken ?? GatewayConfig.readToken() ?? ""
-        let model = config.model
+        let model = config.model.isEmpty ? "anthropic/claude-opus-4-6" : config.model
         let ttsURL = config.ttsURL
         let ttsSpeed = config.ttsSpeed
         
         do {
+            guard !data.isEmpty else {
+                StateManager.shared.state = .idle
+                return
+            }
+
             // STT
             let transcript = try await STTService.shared.transcribe(audio: data, url: sttURL)
             StateManager.shared.currentTranscript = transcript

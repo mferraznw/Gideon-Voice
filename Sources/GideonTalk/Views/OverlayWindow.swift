@@ -4,6 +4,7 @@ import SwiftUI
 @MainActor
 class OverlayWindow: NSPanel {
     private var overlayView: NSHostingView<OverlayView>?
+    private var escapeMonitor: Any?
     
     init() {
         super.init(
@@ -20,12 +21,17 @@ class OverlayWindow: NSPanel {
         self.hidesOnDeactivate = false
         self.becomesKeyOnlyIfNeeded = true
         self.acceptsMouseMovedEvents = true
+        self.isMovableByWindowBackground = true
+        self.titleVisibility = .hidden
+        self.titlebarAppearsTransparent = true
         
         // Add vibrancy
         self.contentView?.wantsLayer = true
         
         // Position at top center
-        if let screen = NSScreen.main {
+        if ConfigManager.shared.overlayOriginX != 0 || ConfigManager.shared.overlayOriginY != 0 {
+            self.setFrameOrigin(NSPoint(x: ConfigManager.shared.overlayOriginX, y: ConfigManager.shared.overlayOriginY))
+        } else if let screen = NSScreen.main {
             let screenFrame = screen.frame
             let x = (screenFrame.width - 400) / 2
             let y = screenFrame.height - 250
@@ -38,17 +44,30 @@ class OverlayWindow: NSPanel {
         self.contentView = overlayView
         
         // Add escape key handler
-        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+        escapeMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            guard let self else { return event }
             if event.keyCode == 53 { // Escape
                 self.hide()
                 return nil
             }
             return event
         }
+
+    }
+
+    deinit {
+        if let escapeMonitor {
+            NSEvent.removeMonitor(escapeMonitor)
+        }
+    }
+
+    override func setFrameOrigin(_ point: NSPoint) {
+        super.setFrameOrigin(point)
+        ConfigManager.shared.saveOverlayOrigin(x: point.x, y: point.y)
     }
     
     func show() {
-        self.makeKeyAndOrderFront(nil)
+        self.orderFrontRegardless()
         self.alphaValue = 0
         
         NSAnimationContext.runAnimationGroup { context in
