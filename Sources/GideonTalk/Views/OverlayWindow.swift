@@ -128,9 +128,13 @@ class OverlayWindow: NSPanel {
 
     private func ensureFrontmostPeriodically() {
         frontmostTimer?.invalidate()
-        frontmostTimer = Timer.scheduledTimer(withTimeInterval: 0.8, repeats: true) { [weak self] _ in
+        frontmostTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] timer in
             guard let self else { return }
-            guard self.isVisible, self.alphaValue > 0.01 else { return }
+            guard self.isVisible, self.alphaValue > 0.01 else {
+                timer.invalidate()
+                return
+            }
+            self.level = self.overlayLevel
             self.orderFrontRegardless()
         }
     }
