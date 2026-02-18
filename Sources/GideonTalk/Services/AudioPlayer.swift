@@ -22,16 +22,18 @@ class AudioPlayer: NSObject, ObservableObject {
         do {
             player = try AVAudioPlayer(data: data)
             player?.delegate = self
+            player?.volume = Float(ConfigManager.shared.playbackVolume)
             player?.isMeteringEnabled = true
             player?.prepareToPlay()
             completionHandler = completion
             isPlaying = true
             player?.play()
+            AppLogger.shared.info("AudioPlayer play: \(data.count) bytes")
             
             // Start level monitoring
             startLevelMonitoring()
         } catch {
-            print("AudioPlayer error: \(error)")
+            AppLogger.shared.error("AudioPlayer failed: \(error.localizedDescription)")
             completion?()
         }
     }
@@ -40,6 +42,7 @@ class AudioPlayer: NSObject, ObservableObject {
         player?.stop()
         player = nil
         isPlaying = false
+        AppLogger.shared.info("AudioPlayer stop")
         currentLevel = 0
         levels = Array(repeating: 0.08, count: 5)
         levelTimer?.invalidate()
@@ -69,6 +72,7 @@ class AudioPlayer: NSObject, ObservableObject {
 extension AudioPlayer: AVAudioPlayerDelegate {
     nonisolated func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         Task { @MainActor in
+            AppLogger.shared.info("AudioPlayer finished: success=\(flag)")
             self.isPlaying = false
             self.currentLevel = 0
             self.levels = Array(repeating: 0.08, count: 5)

@@ -15,8 +15,8 @@ class OverlayWindow: NSPanel {
         )
         
         // Configure as non-activating floating panel
-        self.level = .floating
-        self.collectionBehavior = [.canJoinAllSpaces, .stationary, .fullScreenAuxiliary]
+        self.level = .screenSaver
+        self.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
         self.isFloatingPanel = true
         self.hidesOnDeactivate = false
         self.becomesKeyOnlyIfNeeded = true
@@ -28,14 +28,11 @@ class OverlayWindow: NSPanel {
         // Add vibrancy
         self.contentView?.wantsLayer = true
         
-        // Position at top center
+        // Initial position
         if ConfigManager.shared.overlayOriginX != 0 || ConfigManager.shared.overlayOriginY != 0 {
             self.setFrameOrigin(NSPoint(x: ConfigManager.shared.overlayOriginX, y: ConfigManager.shared.overlayOriginY))
-        } else if let screen = NSScreen.main {
-            let screenFrame = screen.frame
-            let x = (screenFrame.width - 400) / 2
-            let y = screenFrame.height - 250
-            self.setFrameOrigin(NSPoint(x: x, y: y))
+        } else {
+            positionTopRightWithInset()
         }
         
         // Create hosting view
@@ -47,6 +44,7 @@ class OverlayWindow: NSPanel {
         escapeMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
             guard let self else { return event }
             if event.keyCode == 53 { // Escape
+                NotificationCenter.default.post(name: .overlayDidDismiss, object: nil)
                 self.hide()
                 return nil
             }
@@ -67,6 +65,11 @@ class OverlayWindow: NSPanel {
     }
     
     func show() {
+        self.level = .screenSaver
+        self.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
+        self.isFloatingPanel = true
+        self.hidesOnDeactivate = false
+        positionTopRightWithInset()
         self.orderFrontRegardless()
         self.alphaValue = 0
         
@@ -103,5 +106,16 @@ class OverlayWindow: NSPanel {
     
     override var canBecomeMain: Bool {
         return false
+    }
+
+    private func positionTopRightWithInset() {
+        guard let screen = NSScreen.main else { return }
+        let visibleFrame = screen.visibleFrame
+        let horizontalInset: CGFloat = 28
+        let verticalInset: CGFloat = 20
+
+        let x = visibleFrame.maxX - frame.width - horizontalInset
+        let y = visibleFrame.maxY - frame.height - verticalInset
+        self.setFrameOrigin(NSPoint(x: x, y: y))
     }
 }

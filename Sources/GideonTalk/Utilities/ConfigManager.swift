@@ -15,11 +15,13 @@ class ConfigManager: ObservableObject {
     private let sttURLKey = "sttURL"
     private let ttsURLKey = "ttsURL"
     private let ttsSpeedKey = "ttsSpeed"
+    private let playbackVolumeKey = "playbackVolume"
     private let modelKey = "model"
     private let avatarPathKey = "avatarPath"
     private let silenceTimeoutKey = "silenceTimeout"
     private let autoFadeDelayKey = "autoFadeDelay"
     private let launchAtLoginKey = "launchAtLogin"
+    private let continuousModeKey = "continuousMode"
     private let overlayOriginXKey = "overlayOriginX"
     private let overlayOriginYKey = "overlayOriginY"
     
@@ -32,11 +34,13 @@ class ConfigManager: ObservableObject {
     @Published var sttURL: String = "http://127.0.0.1:18790"
     @Published var ttsURL: String = "http://127.0.0.1:18790"
     @Published var ttsSpeed: Double = 1.0
+    @Published var playbackVolume: Double = 0.8
     @Published var model: String = "anthropic/claude-opus-4-6"
     @Published var avatarPath: String = "~/Pictures/MyGideon.png"
     @Published var silenceTimeout: Double = 2.0
     @Published var autoFadeDelay: Double = 3.0
     @Published var launchAtLogin: Bool = false
+    @Published var continuousMode: Bool = true
     @Published var overlayOriginX: Double = 0
     @Published var overlayOriginY: Double = 0
     
@@ -68,6 +72,9 @@ class ConfigManager: ObservableObject {
         ttsURL = defaults.string(forKey: ttsURLKey) ?? ttsURL
         ttsSpeed = defaults.double(forKey: ttsSpeedKey)
         if ttsSpeed == 0 { ttsSpeed = 1.0 }
+        if defaults.object(forKey: playbackVolumeKey) != nil {
+            playbackVolume = defaults.double(forKey: playbackVolumeKey)
+        }
         model = defaults.string(forKey: modelKey) ?? model
         avatarPath = defaults.string(forKey: avatarPathKey) ?? avatarPath
         silenceTimeout = defaults.double(forKey: silenceTimeoutKey)
@@ -75,6 +82,9 @@ class ConfigManager: ObservableObject {
         autoFadeDelay = defaults.double(forKey: autoFadeDelayKey)
         if autoFadeDelay == 0 { autoFadeDelay = 3.0 }
         launchAtLogin = defaults.bool(forKey: launchAtLoginKey)
+        if defaults.object(forKey: continuousModeKey) != nil {
+            continuousMode = defaults.bool(forKey: continuousModeKey)
+        }
 
         if defaults.object(forKey: overlayOriginXKey) != nil,
            defaults.object(forKey: overlayOriginYKey) != nil {
@@ -92,11 +102,13 @@ class ConfigManager: ObservableObject {
         defaults.set(sttURL, forKey: sttURLKey)
         defaults.set(ttsURL, forKey: ttsURLKey)
         defaults.set(ttsSpeed, forKey: ttsSpeedKey)
+        defaults.set(playbackVolume, forKey: playbackVolumeKey)
         defaults.set(model, forKey: modelKey)
         defaults.set(avatarPath, forKey: avatarPathKey)
         defaults.set(silenceTimeout, forKey: silenceTimeoutKey)
         defaults.set(autoFadeDelay, forKey: autoFadeDelayKey)
         defaults.set(launchAtLogin, forKey: launchAtLoginKey)
+        defaults.set(continuousMode, forKey: continuousModeKey)
         defaults.set(overlayOriginX, forKey: overlayOriginXKey)
         defaults.set(overlayOriginY, forKey: overlayOriginYKey)
         

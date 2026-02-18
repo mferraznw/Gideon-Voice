@@ -19,8 +19,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var menuBarManager: MenuBarManager!
     var hotkeyManager: HotkeyManager!
     private var cancellables = Set<AnyCancellable>()
+    private var shouldContinueConversation = false
     
     func applicationDidFinishLaunching(_ notification: Notification) {
+        AppLogger.shared.startNewLaunchLog()
+        AppLogger.shared.info("Log path: \(AppLogger.shared.logPath)")
+
         // Set as accessory (menu bar only, no Dock icon)
         NSApp.setActivationPolicy(.accessory)
         
@@ -32,6 +36,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         AudioRecorder.shared.onSilenceDetected = { [weak self] in
             guard let self else { return }
             guard StateManager.shared.state == .listening else { return }
+            AppLogger.shared.info("Silence callback received in AppDelegate")
             self.stopListeningAndProcess()
         }
 
@@ -54,6 +59,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             name: .hotkeyDidChange,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleOverlayDismissNotification),
+            name: .overlayDidDismiss,
+            object: nil
+        )
         
         // Setup hotkey callback
         hotkeyManager.onToggle = { [weak self] in
@@ -64,9 +75,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Try to start hotkey
         hotkeyManager.start()
+        AppLogger.shared.info("Application did finish launching")
     }
 
     func applicationWillTerminate(_ notification: Notification) {
+        AppLogger.shared.info("Application will terminate")
         hotkeyManager.stop()
         NotificationCenter.default.removeObserver(self)
     }
@@ -81,17 +94,35 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             modifiers: ConfigManager.shared.hotkeyModifiers
         )
     }
+
+    @objc private func handleOverlayDismissNotification() {
+        shouldContinueConversation = false
+        AudioPlayer.shared.stop()
+        if AudioRecorder.shared.isRecording {
+            _ = AudioRecorder.shared.stopRecording()
+        }
+        StateManager.shared.state = .idle
+        AppLogger.shared.info("Overlay dismissed; continuous loop stopped")
+    }
     
     func toggleListening() {
         let stateManager = StateManager.shared
         
         switch stateManager.state {
         case .idle:
+            shouldContinueConversation = true
+            AppLogger.shared.info("Hotkey/menu toggle: start listening")
             startListening()
         case .listening:
+            shouldContinueConversation = false
+            AppLogger.shared.info("Hotkey/menu toggle: stop listening")
             stopListeningAndProcess()
-        default:
-            break
+        case .thinking, .speaking, .error:
+            shouldContinueConversation = false
+            AudioPlayer.shared.stop()
+            overlayWindow.hide()
+            stateManager.state = .idle
+            AppLogger.shared.info("Hotkey/menu toggle: interrupted active turn")
         }
     }
     
@@ -102,11 +133,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         StateManager.shared.state = .listening
         overlayWindow.show()
         AudioRecorder.shared.startRecording()
+        AppLogger.shared.info("Listening started")
     }
     
     private func stopListeningAndProcess() {
         guard AudioRecorder.shared.isRecording else { return }
         StateManager.shared.state = .thinking
+        AppLogger.shared.info("Listening stopped; processing audio")
         Task {
             let audioData = AudioRecorder.shared.stopRecording()
             await processAudio(audioData)
@@ -125,11 +158,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         do {
             guard !data.isEmpty else {
                 StateManager.shared.state = .idle
+                AppLogger.shared.warn("Audio buffer empty after recording")
                 return
             }
 
             // STT
             let transcript = try await STTService.shared.transcribe(audio: data, url: sttURL)
+            AppLogger.shared.info("STT success: \(transcript.count) chars")
             StateManager.shared.currentTranscript = transcript
             
             // Add to conversation history
@@ -142,6 +177,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 token: token,
                 model: model
             )
+            AppLogger.shared.info("Chat success: \(response.count) chars")
             
             // Add response to history
             ConversationManager.shared.addMessage(role: "assistant", content: response)
@@ -151,16 +187,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
             // TTS
             let audioData = try await TTSService.shared.synthesize(text: response, url: ttsURL, speed: ttsSpeed)
+            AppLogger.shared.info("TTS success: \(audioData.count) bytes")
             
             AudioPlayer.shared.play(data: audioData) {
                 Task { @MainActor in
                     StateManager.shared.state = .idle
                     self.overlayWindow.hide(after: ConfigManager.shared.autoFadeDelay)
+                    AppLogger.shared.info("Conversation turn completed")
+
+                    if ConfigManager.shared.continuousMode && self.shouldContinueConversation {
+                        AppLogger.shared.info("Continuous mode waiting 0.5s before re-listen")
+                        try? await Task.sleep(nanoseconds: 500_000_000)
+
+                        guard ConfigManager.shared.continuousMode,
+                              self.shouldContinueConversation,
+                              StateManager.shared.state == .idle else {
+                            AppLogger.shared.info("Continuous mode re-listen cancelled")
+                            return
+                        }
+
+                        self.startListening()
+                    }
                 }
             }
         } catch {
             StateManager.shared.state = .idle
             StateManager.shared.error = error.localizedDescription
+            AppLogger.shared.error("Conversation pipeline failed: \(error.localizedDescription)")
         }
     }
 }

@@ -36,6 +36,12 @@ struct SettingsView: View {
                 Text("\(String(format: "%.1f", config.ttsSpeed))")
                     .font(.caption)
                     .foregroundColor(.secondary)
+                Slider(value: $config.playbackVolume, in: 0.0...1.0, step: 0.05) {
+                    Text("Playback Volume")
+                }
+                Text("\(String(format: "%.2f", config.playbackVolume))")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
             
             Section("Appearance") {
@@ -61,6 +67,7 @@ struct SettingsView: View {
             
             Section("System") {
                 Toggle("Launch at Login", isOn: $config.launchAtLogin)
+                Toggle("Continuous Mode", isOn: $config.continuousMode)
             }
         }
         .formStyle(.grouped)
@@ -74,11 +81,13 @@ struct SettingsView: View {
         .onChange(of: config.sttURL) { config.saveSettings() }
         .onChange(of: config.ttsURL) { config.saveSettings() }
         .onChange(of: config.ttsSpeed) { config.saveSettings() }
+        .onChange(of: config.playbackVolume) { config.saveSettings() }
         .onChange(of: config.model) { config.saveSettings() }
         .onChange(of: config.avatarPath) { config.saveSettings() }
         .onChange(of: config.silenceTimeout) { config.saveSettings() }
         .onChange(of: config.autoFadeDelay) { config.saveSettings() }
         .onChange(of: config.launchAtLogin) { config.saveSettings() }
+        .onChange(of: config.continuousMode) { config.saveSettings() }
     }
 
     private func startHotkeyCapture() {

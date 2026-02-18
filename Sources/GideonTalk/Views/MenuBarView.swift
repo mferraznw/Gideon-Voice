@@ -14,12 +14,11 @@ class MenuBarManager: ObservableObject {
     
     private func setupStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        
+
         if let button = statusItem?.button {
-            button.image = NSImage(systemSymbolName: "mic.slash", accessibilityDescription: "GideonTalk")
-            button.imagePosition = .imageOnly
+            button.image = nil
+            button.title = "⚔️"
         }
-        
         updateIcon(for: .idle)
     }
     
@@ -32,41 +31,61 @@ class MenuBarManager: ObservableObject {
         
         menu?.addItem(NSMenuItem.separator())
         
-        menu?.addItem(NSMenuItem(title: "Toggle Listening", action: #selector(toggleListening), keyEquivalent: "g"))
-        menu?.items.last?.keyEquivalentModifierMask = [.command, .shift]
+        let toggleItem = NSMenuItem(title: "Toggle Listening", action: #selector(toggleListening), keyEquivalent: "g")
+        toggleItem.keyEquivalentModifierMask = [.command, .shift]
+        toggleItem.target = self
+        menu?.addItem(toggleItem)
         
-        menu?.addItem(NSMenuItem(title: "New Conversation", action: #selector(newConversation), keyEquivalent: "n"))
+        let newConversationItem = NSMenuItem(title: "New Conversation", action: #selector(newConversation), keyEquivalent: "n")
+        newConversationItem.target = self
+        menu?.addItem(newConversationItem)
         
         menu?.addItem(NSMenuItem.separator())
         
-        menu?.addItem(NSMenuItem(title: "Settings...", action: #selector(openSettings), keyEquivalent: ","))
+        let settingsItem = NSMenuItem(title: "Settings...", action: #selector(openSettings), keyEquivalent: ",")
+        settingsItem.target = self
+        menu?.addItem(settingsItem)
         
         menu?.addItem(NSMenuItem.separator())
         
-        menu?.addItem(NSMenuItem(title: "Quit GideonTalk", action: #selector(quit), keyEquivalent: "q"))
+        let quitItem = NSMenuItem(title: "Quit GideonTalk", action: #selector(quit), keyEquivalent: "q")
+        quitItem.target = self
+        menu?.addItem(quitItem)
         
         statusItem?.menu = menu
     }
     
     func updateIcon(for state: ConversationState) {
         guard let button = statusItem?.button else { return }
-        
-        switch state {
-        case .idle:
-            button.image = NSImage(systemSymbolName: "mic.slash", accessibilityDescription: "Idle")
-        case .listening:
-            button.image = NSImage(systemSymbolName: "mic.fill", accessibilityDescription: "Listening")
-        case .thinking:
-            button.image = NSImage(systemSymbolName: "sparkles", accessibilityDescription: "Thinking")
-        case .speaking:
-            button.image = NSImage(systemSymbolName: "speaker.wave.2.fill", accessibilityDescription: "Speaking")
-        case .error:
-            button.image = NSImage(systemSymbolName: "exclamationmark.triangle", accessibilityDescription: "Error")
-        }
+
+        button.image = nil
+        button.title = "⚔️"
+        button.attributedTitle = NSAttributedString(
+            string: "⚔️",
+            attributes: [
+                .foregroundColor: tintColor(for: state),
+                .font: NSFont.systemFont(ofSize: 14)
+            ]
+        )
         
         // Update status text
         if let menu = menu, let item = menu.item(withTag: 100) {
             item.title = state.statusText
+        }
+    }
+
+    private func tintColor(for state: ConversationState) -> NSColor {
+        switch state {
+        case .idle:
+            return NSColor.secondaryLabelColor.withAlphaComponent(0.6)
+        case .listening:
+            return NSColor(red: 14/255, green: 165/255, blue: 163/255, alpha: 1)
+        case .thinking:
+            return NSColor(red: 212/255, green: 168/255, blue: 83/255, alpha: 1)
+        case .speaking:
+            return NSColor(red: 56/255, green: 189/255, blue: 248/255, alpha: 1)
+        case .error:
+            return NSColor.systemRed
         }
     }
     
@@ -103,4 +122,5 @@ class MenuBarManager: ObservableObject {
 extension Notification.Name {
     static let toggleListening = Notification.Name("toggleListening")
     static let hotkeyDidChange = Notification.Name("hotkeyDidChange")
+    static let overlayDidDismiss = Notification.Name("overlayDidDismiss")
 }

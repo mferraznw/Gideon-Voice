@@ -14,28 +14,32 @@ actor ChatService {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        // Route to the main Gideon agent session so voice has full context
+        request.setValue("main", forHTTPHeaderField: "x-openclaw-agent-id")
+        request.setValue("agent:main:main", forHTTPHeaderField: "x-openclaw-session-key")
         
         let body: [String: Any] = [
-            "model": model,
-            "messages": systemMessage() + messages,
+            "model": "openclaw:main",
+            "messages": messages,
+            "user": "voice",
             "stream": false
         ]
         
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        request.timeoutInterval = 60
         
-        let (responseData, _) = try await URLSession.shared.data(for: request)
+        print("[ChatService] Sending to gateway: \(messages.last?["content"]?.prefix(80) ?? "empty")")
+        
+        let (responseData, httpResponse) = try await URLSession.shared.data(for: request)
+        
+        if let http = httpResponse as? HTTPURLResponse {
+            print("[ChatService] Response status: \(http.statusCode)")
+        }
         
         let response = try JSONDecoder().decode(ChatResponse.self, from: responseData)
-        return response.choices.first?.message.content ?? ""
-    }
-    
-    private func systemMessage() -> [[String: String]] {
-        [
-            [
-                "role": "system",
-                "content": "You are Gideon, a voice assistant. Keep responses concise and conversational. You're speaking out loud, so be natural — no markdown, no bullet points, no code blocks."
-            ]
-        ]
+        let reply = response.choices.first?.message.content ?? ""
+        print("[ChatService] Got reply: \(reply.prefix(80))")
+        return reply
     }
 }
 

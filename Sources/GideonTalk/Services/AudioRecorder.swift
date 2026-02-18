@@ -1,5 +1,5 @@
 import Foundation
-import AVFoundation
+@preconcurrency import AVFoundation
 import SwiftUI
 
 @MainActor
@@ -32,22 +32,25 @@ final class AudioRecorder: ObservableObject {
         guard let engine = audioEngine else { return }
 
         let inputNode = engine.inputNode
-        let format = inputNode.inputFormat(forBus: 0)
+        let nativeFormat = inputNode.inputFormat(forBus: 0)
 
         // Create temp file
         let tempDir = FileManager.default.temporaryDirectory
-        recordingURL = tempDir.appendingPathComponent("recording_\(UUID().uuidString).wav")
-
+        recordingURL = tempDir.appendingPathComponent("recording_\(UUID().uuidString).caf")
         guard let url = recordingURL else { return }
 
-        // Create audio file
-        audioFile = try? AVAudioFile(forWriting: url, settings: format.settings)
+        do {
+            audioFile = try AVAudioFile(forWriting: url, settings: nativeFormat.settings)
+        } catch {
+            AppLogger.shared.error("AudioRecorder failed to create native audio file: \(error.localizedDescription)")
+            return
+        }
         let recordingFile = audioFile
 
-        inputNode.removeTap(onBus: 0)
+        AppLogger.shared.info("AudioRecorder start: recording native format \(nativeFormat.sampleRate)Hz channels=\(nativeFormat.channelCount)")
 
-        // Install tap on input node
-        inputNode.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
+        inputNode.removeTap(onBus: 0)
+        inputNode.installTap(onBus: 0, bufferSize: 4096, format: nativeFormat) { [weak self] buffer, _ in
             try? recordingFile?.write(from: buffer)
 
             let rms = Self.rms(for: buffer)
@@ -60,8 +63,12 @@ final class AudioRecorder: ObservableObject {
             }
         }
 
-        try? engine.start()
-        isRecording = true
+        do {
+            try engine.start()
+            isRecording = true
+        } catch {
+            AppLogger.shared.error("AudioRecorder failed to start engine: \(error.localizedDescription)")
+        }
     }
 
     func stopRecording() -> Data {
@@ -79,14 +86,45 @@ final class AudioRecorder: ObservableObject {
             micLevels = Array(repeating: 0.08, count: 7)
         }
 
-        guard let url = recordingURL,
-              let data = try? Data(contentsOf: url) else {
+        guard let url = recordingURL else {
             return Data()
         }
 
-        // Clean up temp file
+        let convertedURL = url.deletingPathExtension().appendingPathExtension("wav")
+
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/afconvert")
+        process.arguments = [
+            "-f", "WAVE",
+            "-d", "LEI16@16000",
+            "-c", "1",
+            url.path,
+            convertedURL.path
+        ]
+
+        do {
+            try process.run()
+            process.waitUntilExit()
+        } catch {
+            AppLogger.shared.error("AudioRecorder failed to run afconvert: \(error.localizedDescription)")
+            return Data()
+        }
+
+        guard process.terminationStatus == 0 else {
+            AppLogger.shared.error("AudioRecorder afconvert failed with exit code \(process.terminationStatus)")
+            return Data()
+        }
+
+        guard let data = try? Data(contentsOf: convertedURL) else {
+            AppLogger.shared.error("AudioRecorder failed to read converted WAV")
+            return Data()
+        }
+
         try? FileManager.default.removeItem(at: url)
+        try? FileManager.default.removeItem(at: convertedURL)
         recordingURL = nil
+
+        AppLogger.shared.info("AudioRecorder stop: afconvert produced \(data.count) bytes of 16kHz mono WAV")
 
         return data
     }
@@ -110,6 +148,7 @@ final class AudioRecorder: ObservableObject {
                !hasAutoStopped,
                Date().timeIntervalSince(silenceStart) >= timeout {
                 hasAutoStopped = true
+                AppLogger.shared.info("Silence auto-stop triggered after \(timeout)s")
                 onSilenceDetected?()
             }
         } else {
