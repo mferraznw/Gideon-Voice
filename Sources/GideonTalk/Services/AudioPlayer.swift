@@ -9,6 +9,11 @@ class AudioPlayer: NSObject, ObservableObject {
     private var player: AVAudioPlayer?
     private var completionHandler: (() -> Void)?
     private var levelTimer: Timer?
+    private var segmentQueue: [Data] = []
+    private var queueCompletion: (() -> Void)?
+    private var queueClosed = false
+    private var isQueueMode = false
+    private var needsStartupWarmup = true
     
     @Published var isPlaying = false
     @Published var currentLevel: Float = 0
@@ -19,22 +24,76 @@ class AudioPlayer: NSObject, ObservableObject {
     }
     
     func play(data: Data, completion: (() -> Void)? = nil) {
+        stop()
+        isQueueMode = false
+        queueCompletion = nil
+        queueClosed = true
+        needsStartupWarmup = true
+        completionHandler = completion
+        startPlayback(data: data, applyWarmupDelay: true)
+    }
+
+    func playQueue(segments: [Data], completion: (() -> Void)? = nil) {
+        stop()
+        isQueueMode = true
+        queueClosed = false
+        segmentQueue = segments
+        queueCompletion = completion
+        needsStartupWarmup = true
+        playNextSegmentIfNeeded()
+    }
+
+    func enqueueSegment(_ data: Data) {
+        if !isQueueMode {
+            playQueue(segments: [data], completion: nil)
+            return
+        }
+
+        segmentQueue.append(data)
+        playNextSegmentIfNeeded()
+    }
+
+    func finishQueue(completion: (() -> Void)? = nil) {
+        if let completion {
+            queueCompletion = completion
+        }
+        queueClosed = true
+        playNextSegmentIfNeeded()
+    }
+
+    private func startPlayback(data: Data, applyWarmupDelay: Bool) {
         do {
             player = try AVAudioPlayer(data: data)
             player?.delegate = self
             player?.volume = Float(ConfigManager.shared.playbackVolume)
             player?.isMeteringEnabled = true
             player?.prepareToPlay()
-            completionHandler = completion
             isPlaying = true
-            player?.play()
-            AppLogger.shared.info("AudioPlayer play: \(data.count) bytes")
-            
-            // Start level monitoring
-            startLevelMonitoring()
+
+            let playerRef = player
+            let startPlaybackBlock = { [weak self] in
+                guard let self, self.player === playerRef else { return }
+                self.player?.play()
+                AppLogger.shared.info("AudioPlayer play: \(data.count) bytes")
+                self.startLevelMonitoring()
+            }
+
+            if applyWarmupDelay {
+                Task { @MainActor in
+                    try? await Task.sleep(nanoseconds: 50_000_000)
+                    startPlaybackBlock()
+                }
+            } else {
+                startPlaybackBlock()
+            }
         } catch {
             AppLogger.shared.error("AudioPlayer failed: \(error.localizedDescription)")
-            completion?()
+            if isQueueMode {
+                playNextSegmentIfNeeded()
+            } else {
+                completionHandler?()
+                completionHandler = nil
+            }
         }
     }
     
@@ -47,6 +106,32 @@ class AudioPlayer: NSObject, ObservableObject {
         levels = Array(repeating: 0.08, count: 5)
         levelTimer?.invalidate()
         levelTimer = nil
+        segmentQueue.removeAll()
+        queueClosed = true
+        isQueueMode = false
+        needsStartupWarmup = true
+        queueCompletion = nil
+        completionHandler = nil
+    }
+
+    private func playNextSegmentIfNeeded() {
+        guard isQueueMode else { return }
+        guard !isPlaying else { return }
+
+        if !segmentQueue.isEmpty {
+            let next = segmentQueue.removeFirst()
+            let applyWarmup = needsStartupWarmup
+            needsStartupWarmup = false
+            startPlayback(data: next, applyWarmupDelay: applyWarmup)
+            return
+        }
+
+        guard queueClosed else { return }
+
+        isQueueMode = false
+        let completion = queueCompletion
+        queueCompletion = nil
+        completion?()
     }
     
     private func startLevelMonitoring() {
@@ -73,13 +158,19 @@ extension AudioPlayer: AVAudioPlayerDelegate {
     nonisolated func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         Task { @MainActor in
             AppLogger.shared.info("AudioPlayer finished: success=\(flag)")
+            self.player = nil
             self.isPlaying = false
             self.currentLevel = 0
             self.levels = Array(repeating: 0.08, count: 5)
             self.levelTimer?.invalidate()
             self.levelTimer = nil
-            self.completionHandler?()
-            self.completionHandler = nil
+
+            if self.isQueueMode {
+                self.playNextSegmentIfNeeded()
+            } else {
+                self.completionHandler?()
+                self.completionHandler = nil
+            }
         }
     }
 }

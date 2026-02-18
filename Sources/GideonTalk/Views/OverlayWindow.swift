@@ -5,6 +5,8 @@ import SwiftUI
 class OverlayWindow: NSPanel {
     private var overlayView: NSHostingView<OverlayView>?
     private var escapeMonitor: Any?
+    private var frontmostTimer: Timer?
+    private let overlayLevel = NSWindow.Level(rawValue: NSWindow.Level.screenSaver.rawValue + 1)
     
     init() {
         super.init(
@@ -15,7 +17,7 @@ class OverlayWindow: NSPanel {
         )
         
         // Configure as non-activating floating panel
-        self.level = .screenSaver
+        self.level = overlayLevel
         self.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
         self.isFloatingPanel = true
         self.hidesOnDeactivate = false
@@ -57,6 +59,7 @@ class OverlayWindow: NSPanel {
         if let escapeMonitor {
             NSEvent.removeMonitor(escapeMonitor)
         }
+        frontmostTimer?.invalidate()
     }
 
     override func setFrameOrigin(_ point: NSPoint) {
@@ -65,12 +68,13 @@ class OverlayWindow: NSPanel {
     }
     
     func show() {
-        self.level = .screenSaver
+        self.level = overlayLevel
         self.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
         self.isFloatingPanel = true
         self.hidesOnDeactivate = false
         positionTopRightWithInset()
         self.orderFrontRegardless()
+        ensureFrontmostPeriodically()
         self.alphaValue = 0
         
         NSAnimationContext.runAnimationGroup { context in
@@ -91,6 +95,9 @@ class OverlayWindow: NSPanel {
     }
     
     private func animateHide() {
+        frontmostTimer?.invalidate()
+        frontmostTimer = nil
+
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.2
             context.timingFunction = CAMediaTimingFunction(name: .easeIn)
@@ -117,5 +124,14 @@ class OverlayWindow: NSPanel {
         let x = visibleFrame.maxX - frame.width - horizontalInset
         let y = visibleFrame.maxY - frame.height - verticalInset
         self.setFrameOrigin(NSPoint(x: x, y: y))
+    }
+
+    private func ensureFrontmostPeriodically() {
+        frontmostTimer?.invalidate()
+        frontmostTimer = Timer.scheduledTimer(withTimeInterval: 0.8, repeats: true) { [weak self] _ in
+            guard let self else { return }
+            guard self.isVisible, self.alphaValue > 0.01 else { return }
+            self.orderFrontRegardless()
+        }
     }
 }
